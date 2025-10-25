@@ -1,0 +1,26 @@
+name: Auto Lunch Booking
+
+on:
+  schedule:
+    # Run at 10:00 AM Bangladesh time (UTC+6)
+    - cron: "0 4 * * 0-4"  # UTC 4 AM = 10 AM Bangladesh, Sunday–Thursday
+  workflow_dispatch:
+
+jobs:
+  run-booking:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run booking script
+        env:
+          CSRF_TOKEN: ${{ secrets.CSRF_TOKEN }}
+          EMP_ID: ${{ secrets.EMP_ID }}
+          LOCATION_TIC: ${{ secrets.LOCATION_TIC }}
+        run: python auto_lunch_booker.py
