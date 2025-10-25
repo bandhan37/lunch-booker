@@ -3,14 +3,15 @@ name: Auto Lunch Booking
 on:
   schedule:
     # Run at 10:00 AM Bangladesh time (UTC+6)
-    - cron: "0 4 * * 0-4"  # UTC 4 AM = 10 AM Bangladesh, Sunday–Thursday
-  workflow_dispatch:
+    - cron: "0 4 * * 0-4"  # 04:00 UTC = 10:00 AM Bangladesh, Sunday–Thursday
+  workflow_dispatch:  # allows you to trigger it manually from the Actions tab
 
 jobs:
   run-booking:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -18,9 +19,15 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
       - name: Run booking script
         env:
-          CSRF_TOKEN: ${{ secrets.CSRF_TOKEN }}
           EMP_ID: ${{ secrets.EMP_ID }}
           LOCATION_TIC: ${{ secrets.LOCATION_TIC }}
+          ULKA_USERNAME: ${{ secrets.ULKA_USERNAME }}
+          ULKA_PASSWORD: ${{ secrets.ULKA_PASSWORD }}
         run: python auto_lunch_booker.py
