@@ -28,6 +28,4 @@ jobs:
         env:
           EMP_ID: ${{ secrets.EMP_ID }}
           LOCATION_TIC: ${{ secrets.LOCATION_TIC }}
-          ULKA_USERNAME: ${{ secrets.ULKA_USERNAME }}
-          ULKA_PASSWORD: ${{ secrets.ULKA_PASSWORD }}
         run: python auto_lunch_booker.py
