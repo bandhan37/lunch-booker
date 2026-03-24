@@ -2,33 +2,33 @@ name: Auto Lunch Booking
 
 on:
   schedule:
-    - cron: "30 4 * * 0-4"
+    # Run at 10:30 AM Bangladesh time (UTC+6)
+    - cron: "30 4 * * 0-4"  # 04:30 UTC = 10:30 AM Bangladesh, Sunday–Thursday
   workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # 🔥 future-proof
 
 jobs:
   run-booking:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
 
     steps:
-      # 🔽 Clone repo WITHOUT actions/checkout
-      - name: Clone repository
-        run: |
-          git clone https://github.com/${{ github.repository }} .
-      
-      # 🔽 Install Python manually (already available, just verify)
-      - name: Check Python
-        run: python3 --version
+      - name: Checkout repository
+        uses: actions/checkout@v4   # update to v5 when available
 
-      # 🔽 Install dependencies
+      - name: Setup Python
+        uses: actions/setup-python@v5   # update to v6 when available
+        with:
+          python-version: '3.11'   # 🔧 better than 3.x (deterministic)
+
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
-          pip3 install requests beautifulsoup4
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
 
-      # 🔽 Run script
       - name: Run booking script
         env:
           EMP_ID: ${{ secrets.EMP_ID }}
           LOCATION_TIC: ${{ secrets.LOCATION_TIC }}
-        run: python3 auto_lunch_booker.py
+        run: python auto_lunch_booker.py
