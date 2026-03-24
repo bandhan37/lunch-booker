@@ -4,7 +4,10 @@ on:
   schedule:
     # Run at 10:30 AM Bangladesh time (UTC+6)
     - cron: "30 4 * * 0-4"  # 04:30 UTC = 10:30 AM Bangladesh, Sunday–Thursday
-  workflow_dispatch:  # allows you to trigger manually from Actions tab
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # 🔥 future-proof
 
 jobs:
   run-booking:
@@ -12,12 +15,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4   # update to v5 when available
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5   # update to v6 when available
         with:
-          python-version: '3.x'
+          python-version: '3.11'   # 🔧 better than 3.x (deterministic)
 
       - name: Install dependencies
         run: |
